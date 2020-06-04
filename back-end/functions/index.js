@@ -11,11 +11,16 @@ const app = express();
 
 // to get information for firebase
 app.get('/test', (req, res) => {
-  admin.firestore().collection('test').get()
+  admin.firestore().collection('test').orderBy('date', 'desc').get()
   .then((doc) => {
     let testArray = [];
     doc.forEach((docToPush) => {
-      testArray.push(docToPush.data());
+      testArray.push({
+        id: docToPush.id,
+        name: docToPush.data().name,
+        body: docToPush.data().body,
+        date: docToPush.data().date
+      });
     });
     return res.json(testArray);
   })
@@ -34,7 +39,7 @@ app.post('/test', (req, res) => {
   const newTest = {
     name: req.body.name,
     body: req.body.body,
-    date: admin.firestore.Timestamp.fromDate(new Date())
+    date: new Date().toISOString()
   };
 
 // posting
