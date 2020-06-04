@@ -5,8 +5,12 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
+// express library
+const express = require('express');
+const app = express();
+
 // to get information for firebase
-exports.getTest = functions.https.onRequest((req, res) => {
+app.get('/test', (req, res) => {
   admin.firestore().collection('test').get()
   .then((doc) => {
     let testArray = [];
@@ -19,9 +23,9 @@ exports.getTest = functions.https.onRequest((req, res) => {
 });
 
 // to create data
-exports.createTest = functions.https.onRequest((req, res) => {
+app.post('/test', (req, res) => {
 
-  // method just post
+  // method to just post
   if(req.method !== 'POST') {
     res.status(400).json({error: 'only can be (POST) method'})
   };
@@ -43,3 +47,6 @@ exports.createTest = functions.https.onRequest((req, res) => {
     console.error(err);
   });
 });
+
+// exporting by express
+exports.api = functions.https.onRequest(app);
