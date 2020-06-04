@@ -21,6 +21,11 @@ exports.getTest = functions.https.onRequest((req, res) => {
 // to create data
 exports.createTest = functions.https.onRequest((req, res) => {
 
+  // method just post
+  if(req.method !== 'POST') {
+    res.status(400).json({error: 'only can be (POST) method'})
+  };
+
 // creating
   const newTest = {
     name: req.body.name,
