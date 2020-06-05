@@ -1,15 +1,10 @@
-// The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
+// LIBRARYS
 const functions = require('firebase-functions');
-
-// The Firebase Admin SDK to access the Firebase Realtime Database.
+const express = require('express');
 const admin = require('firebase-admin');
-admin.initializeApp();
-
-// firebase library
 const firebase = require('firebase');
 
-// Your web app's Firebase configuration
-var firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyBuGAluHUpfjwbU1iZmrC2GEAt6KWJpqBY",
   authDomain: "malumodas-aaaeb.firebaseapp.com",
   databaseURL: "https://malumodas-aaaeb.firebaseio.com",
@@ -21,14 +16,14 @@ var firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
-// express library
-const express = require('express');
 const app = express();
+admin.initializeApp();
 
-// to get information for firebase
+const db = admin.firestore();
+
+// TO GET THE DATA
 app.get('/test', (req, res) => {
-  admin.firestore().collection('test').orderBy('date', 'desc').get()
+  db.collection('test').orderBy('date', 'desc').get()
   .then((doc) => {
     let testArray = [];
     doc.forEach((docToPush) => {
@@ -44,7 +39,7 @@ app.get('/test', (req, res) => {
   .catch((err) => console.error(err));
 });
 
-// to create data
+// TO CREATE NEW DATA
 app.post('/test', (req, res) => {
   // method to just post
   if(req.method !== 'POST') {
@@ -57,7 +52,7 @@ app.post('/test', (req, res) => {
     date: new Date().toISOString()
   };
   // posting
-  admin.firestore().collection('test').add(newTest)
+  db.collection('test').add(newTest)
   .then((doc) => {
     res.json({message: `ID(${doc.id}) created with sucess`});
   })
@@ -67,7 +62,7 @@ app.post('/test', (req, res) => {
   });
 });
 
-// to create new user
+// TO CREATE NEW USER
 // creating
 app.post('/signup', (req, res) => {
   const newUser = {
@@ -78,17 +73,26 @@ app.post('/signup', (req, res) => {
     whatsapp: req.body.whatsapp
   };
   // validating information
-  firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
-  .then(doc => {
-    return res.status(201).json({message: `ID ${doc.user.uid} create with sucess!`})
-  })
-  .catch(err => {
-    console.error(err);
-    return res.status(500).json({
-      error: `${err.code} something went wrong with the creation of the user`
-    });
+  db.doc(`/users/${newUser.email}`).get().then(doc => {
+    if(doc.exists) {
+      return res.status(400).json({email: `this email already exists`});
+    } else {
+      return firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
+      .then(data => {
+        return data.user.getIdToken();
+      })
+      .then(token => {
+        return res.status(201).json({token});
+      })
+      .catch(err => {
+        console.error(err)
+        return res.status(500).json({
+          error: `something went wrong with your new user code bellow \n${err.code}`
+        });
+      });
+    };
   });
 });
 
-// exporting by express
+// EXPORTING BY EXPRESS
 exports.api = functions.https.onRequest(app);
