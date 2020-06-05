@@ -16,9 +16,9 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const app = express();
 admin.initializeApp();
 
+const app = express();
 const db = admin.firestore();
 
 // TO GET THE DATA
@@ -73,40 +73,41 @@ app.post('/signup', (req, res) => {
     whatsapp: req.body.whatsapp
   };
   // validating information
-  let token, id;
+  let token = null;
+  let userId = null;
   db.doc(`/users/${newUser.email}`).get()
-    .then(doc => {
-      if (doc.exists) {
-        return res.status(400).json({email: `this email already exists`});
-      } else {
-        return firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
-      }
-    })
-    .then((data) => {
-      id = data.user.uid;
-      return data.user.getIdToken();
-    })
-    // puting user to data
-    .then((token) => {
-      token = token;
-      const userCredentials = {
-        email: newUser.email,
-        name: newUser.name,
-        whatsapp: newUser.whatsapp,
-        createAt: new Date.toISOString(),
-        id: id
-      };
-      return db.doc(`/users/${newUser.email}`).set(userCredentials);
-    })
-    .then(() => {
-      return res.status(201).json({token});
-    })
-    .catch(err => {
-      console.error(err)
-      return res.status(500).json({
-        error: `something went wrong with your new user ${err.code}`
-      });
+  .then(doc => {
+    if (doc.exists) {
+      return res.status(400).json({email: `this email already exists`});
+    } else {
+      return firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
+    }
+  })
+  .then((data) => {
+    userId = data.user.uid;
+    return data.user.getIdToken();
+  })
+  // puting user to data
+  .then((idToken) => {
+    token = idToken;
+    const userCredentials = {
+      email: newUser.email,
+      name: newUser.name,
+      whatsapp: newUser.whatsapp,
+      createAt: new Date().toISOString(),
+      id: userId
+    };
+    return db.doc(`/users/${newUser.email}`).set(userCredentials);
+  })
+  .then((nothing) => {
+    return res.status(201).json({ token });
+  })
+  .catch(err => {
+    console.error(err);
+    return res.status(500).json({
+      error: `something went wrong with your new user ${err.code}`
     });
+  });
 });
 
 // EXPORTING BY EXPRESS
