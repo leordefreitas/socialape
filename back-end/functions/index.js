@@ -73,25 +73,40 @@ app.post('/signup', (req, res) => {
     whatsapp: req.body.whatsapp
   };
   // validating information
-  db.doc(`/users/${newUser.email}`).get().then(doc => {
-    if(doc.exists) {
-      return res.status(400).json({email: `this email already exists`});
-    } else {
-      return firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
-      .then(data => {
-        return data.user.getIdToken();
-      })
-      .then(token => {
-        return res.status(201).json({token});
-      })
-      .catch(err => {
-        console.error(err)
-        return res.status(500).json({
-          error: `something went wrong with your new user code bellow \n${err.code}`
-        });
+  let token, id;
+  db.doc(`/users/${newUser.email}`).get()
+    .then(doc => {
+      if (doc.exists) {
+        return res.status(400).json({email: `this email already exists`});
+      } else {
+        return firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
+      }
+    })
+    .then((data) => {
+      id = data.user.uid;
+      return data.user.getIdToken();
+    })
+    // puting user to data
+    .then((token) => {
+      token = token;
+      const userCredentials = {
+        email: newUser.email,
+        name: newUser.name,
+        whatsapp: newUser.whatsapp,
+        createAt: new Date.toISOString(),
+        id: id
+      };
+      return db.doc(`/users/${newUser.email}`).set(userCredentials);
+    })
+    .then(() => {
+      return res.status(201).json({token});
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json({
+        error: `something went wrong with your new user ${err.code}`
       });
-    };
-  });
+    });
 });
 
 // EXPORTING BY EXPRESS
