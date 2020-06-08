@@ -63,6 +63,21 @@ app.post('/test', (req, res) => {
 });
 
 // TO CREATE NEW USER
+// functions to validate some informations
+const emptyString = (string) => {
+  if (string.trim() === '') true;
+  else false;
+};
+const isEmail = (email) => {
+  const emailRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (email.match(emailRegEx)) true;
+  else false;
+};
+const isWhatsapp = (whatsappNumber) => {
+  if (typeof(whatsappNumber) === 'number' && whatsappNumber.toString().length === 11) return true;
+  else return false;
+};
+
 // creating
 app.post('/signup', (req, res) => {
   const newUser = {
@@ -72,6 +87,26 @@ app.post('/signup', (req, res) => {
     confirmPassword: req.body.confirmPassword,
     whatsapp: req.body.whatsapp
   };
+
+  // validating content that user put
+  let errorsOfValidations = {};
+  
+  // emails
+  if (emptyString(newUser.email)) {
+    errorsOfValidations.email = 'Email must be not empty'
+  } else if (!isEmail(newUser.email)) {
+    errorsOfValidations.email = 'This is not a email adress'
+  }
+
+  if (emptyString(newUser.password)) {
+    errorsOfValidations.password = 'Password must be not empty'
+  } else if (newUser.password !== newUser.confirmPassword) {
+    errorsOfValidations.password = 'Password must be equal to confirm password'
+  }
+
+
+
+
   // validating information
   let token = null;
   let userId = null;
