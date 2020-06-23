@@ -2,7 +2,7 @@ const { db } = require('../util/admin');
 
 // HANDLE TO GET PRODUCT
 exports.getProduct = (req, res) => {
-  db.collection('products').orderBy('date', 'desc').get()
+  db.collection('products').orderBy('createAt', 'desc').get()
   .then((doc) => {
     let productsArray = [];
     doc.forEach((docToPush) => {
@@ -12,7 +12,7 @@ exports.getProduct = (req, res) => {
         material: docToPush.data().material,
         color: docToPush.data().color,
         size: docToPush.data().size,
-        createAt: docToPush.data().date
+        createAt: docToPush.data().createAt
       });
     });
     return res.json(productsArray);
