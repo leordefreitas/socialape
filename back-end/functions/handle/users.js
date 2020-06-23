@@ -1,10 +1,6 @@
 const { db } = require('../util/admin');
-const { emptyString, isEmail, isWhatsapp } = require('./functionsUsedToValidateInformations');
+const { validateUsersSignUp, validateUsersLogin } = require('../util/validates');
 const firebase = require('firebase');
-const { firebaseConfig } = require('../util/firebaseConfig');
-
-// initializing app
-firebase.initializeApp(firebaseConfig);
 
 // TO CREATE NEW USER
 exports.createUser = (req, res) => {
@@ -16,33 +12,8 @@ exports.createUser = (req, res) => {
     whatsapp: req.body.whatsapp
   };
 
-  // validating content that user put
-  let errorsOfValidations = {};
-  
-  // emails
-  if (emptyString(newUser.email)) {
-    errorsOfValidations.email = 'Email must be not empty'
-  } else if (!isEmail(newUser.email)) {
-    errorsOfValidations.email = 'This is not a email adress'
-  }
-  // password
-  if (emptyString(newUser.password)) {
-    errorsOfValidations.password = 'Password must be not empty'
-  } else if (newUser.password !== newUser.confirmPassword) {
-    errorsOfValidations.password = 'Password must be equal to confirm password'
-  }
-  // whatsapp
-  if (emptyString(newUser.whatsapp)) {
-    errorsOfValidations.whatsapp = 'Whatsapp must be not empty'
-  } else if (!isWhatsapp(newUser.whatsapp)) {
-    errorsOfValidations.whatsapp = 'Whatsapp need 11 numbers'
-  }
-  // name
-  if (emptyString(newUser.name)) {
-    errorsOfValidations.name = 'Name must be not empty'
-  }
-  // errorsOfValidations
-  if (Object.keys(errorsOfValidations).length > 0) res.status(400).json(errorsOfValidations);
+  const { valid, validationErrorsCreateUser } = validateUsersSignUp(newUser);
+  if (!valid) res.status(400).json(validationErrorsCreateUser);
 
 // validating information
   let token = null;
@@ -89,11 +60,8 @@ exports.loginUser = (req, res) => {
     password: req.body.password
   };
 
-  // validating errors
-  let errorsOfLogin = {};
-  if (emptyString(userToLogin.email)) return errorsOfLogin.email = 'Must not be empty';
-  if (emptyString(userToLogin.password)) return errorsOfLogin.password = 'Must not be empty';
-  if(Object.keys(errorsOfLogin).length > 0) return res.status(400).json(errorsOfLogin);
+  const { valid, validationErrorsLogin } = validateUsersLogin(userToLogin);
+  if (!valid) res.status(400).json(validationErrorsLogin);
 
   // actually logining
   firebase.auth().signInWithEmailAndPassword(userToLogin.email, userToLogin.password)
