@@ -2,9 +2,8 @@
 const functions = require('firebase-functions');
 const express = require('express');
 const { getProduct, createProduct } = require('./handle/products');
-const { createUser, loginUser } = require('./handle/users');
-const { firebaseconfig } = require('./util/firebaseConfig');
-const { fbAuth } = require('./util/fbAuth');
+const { createUser, loginUser, upLoadImage } = require('./handle/users');
+const { FBAuth } = require('./util/fbAuth');
 
 const app = express();
 
@@ -12,13 +11,15 @@ const app = express();
 // get
 app.get('/products', getProduct);
 // add
-app.post('/products', fbAuth, createProduct);
+app.post('/products', FBAuth, createProduct);
 
 // USERS ROUTES
 // create
 app.post('/signup', createUser);
 // login
 app.post('/login', loginUser);
+// upload images
+app.post('/user/image', FBAuth, upLoadImage);
 
 // EXPORTING BY EXPRESS
 exports.api = functions.https.onRequest(app);
