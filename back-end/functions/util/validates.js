@@ -55,5 +55,22 @@ exports.validateUsersLogin = data => {
     validationErrorsLogin,
     valid: Object.keys(validationErrorsLogin).length === 0 ? true : false
   }
+};
 
+// VALIDATE REDUCE USER DETAIL
+exports.reduceUserDetails = (data) => {
+  let userDetail = {};
+  // to user put his biography
+  if (!emptyString(data.bio.trim())) userDetail.bio = data.bio;
+  // to user put his website
+  if (!emptyString(data.website.trim())) {
+    // just to know if the web site has http://
+    if (data.website.trim().substring(0, 4) !== 'http') {
+      userDetail.website = `http://${data.website.trim()}`;
+    } else userDetail.website = data.website;
+  }
+  // to user put his location
+  if (!emptyString(data.location.trim())) userDetail.location = data.location;
+  // just to if has something in this box they add if not just pass a empty box
+  return userDetail;
 };

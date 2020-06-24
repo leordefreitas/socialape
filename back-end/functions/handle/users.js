@@ -1,8 +1,9 @@
 const { admin, db } = require('../util/admin');
-const { validateUsersSignUp, validateUsersLogin } = require('../util/validates');
+const { validateUsersSignUp, validateUsersLogin, reduceUserDetails } = require('../util/validates');
 const firebase = require('firebase');
 // const { app } = require('firebase-functions');
 const { firebaseConfig } = require('../util/firebaseConfig');
+const { UserRecordMetadata } = require('firebase-functions/lib/providers/auth');
 
 firebase.initializeApp(firebaseConfig);
 
@@ -139,3 +140,40 @@ exports.upLoadImage = (req, res) => {
   busboy.end(req.rawBody);
 };
 
+// TO ADD USER DETAIL
+exports.addUserDetail = (req, res) => {
+  let userDetails = reduceUserDetails(req.body);
+  // uptading user with the new details
+  db.doc(`/users/${req.user.email}`).update(userDetails)
+    .then(() => {
+      return res.json({ message: 'User details add with sucess' })
+    })
+    .catch((err) => {
+      console.error(err)
+      return res.status(500).json({ error: err.code })
+    })
+};
+
+// TO GET USER
+exports.getAuthenticatedUser = (req, res) => {
+  let userData = {};
+  db.doc(`/users/${req.user.email}`).get()
+    .then(doc => {
+      // has to do it because if not crash the script
+      if (doc.exists) {
+        userData.credentials = doc.data();
+        return db.collection('likes').where('userEmail', '==', req.user.email).get()
+      }
+    })
+    .then(data => {
+      userData.likes = [];
+      data.forEach(doc => {
+        userData.likes.push(doc.data());
+      });
+      return res.json(userData);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code })
+    })
+};
