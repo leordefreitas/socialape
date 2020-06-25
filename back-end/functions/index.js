@@ -1,7 +1,7 @@
 // LIBRARYS
 const functions = require('firebase-functions');
 const express = require('express');
-const { getProduct, createProduct } = require('./handle/products');
+const { getAllScreams, createNewScream } = require('./handle/screams');
 const { 
   createUser,
   loginUser, 
@@ -13,11 +13,13 @@ const { FBAuth } = require('./util/fbAuth');
 
 const app = express();
 
-// PRODUCTS ROUTES
+// SCREAM ROUTES
 // get
-app.get('/products', getProduct);
+app.get('/products', getAllScreams);
 // add
-app.post('/products', FBAuth, createProduct);
+app.post('/products', FBAuth, createNewScream);
+
+
 
 // USERS ROUTES
 // create

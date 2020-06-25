@@ -1,7 +1,7 @@
 const { db } = require('../util/admin');
 
 // HANDLE TO GET PRODUCT
-exports.getProduct = (req, res) => {
+exports.getAllScreams = (req, res) => {
   db.collection('products').orderBy('createAt', 'desc').get()
   .then((doc) => {
     let productsArray = [];
@@ -21,7 +21,7 @@ exports.getProduct = (req, res) => {
 };
 
 // HANDLE TO CREATE PRODUCT
-exports.createProduct = (req, res) => {
+exports.createNewScream = (req, res) => {
   // method to just post
   if(req.method !== 'POST') {
     res.status(400).json({error: 'Only can be POST method'})
