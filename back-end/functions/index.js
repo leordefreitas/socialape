@@ -19,11 +19,17 @@ const app = express();
 
 // SCREAM ROUTES
 // get
-app.get('/products', getAllScreams);
+app.get('/screams', getAllScreams);
 // add
-app.post('/products', FBAuth, createNewScream);
+app.post('/scream', FBAuth, createNewScream);
 // get all information about one scream
-// app.get('/scream/:screamId', getOneScream)
+app.get('/scream/:screamId', getOneScream)
+
+// TODOS
+// TODO delete scream
+// TODO like a scream 
+// TODO unlike a scream
+// TODO comment on scream
 
 
 // USERS ROUTES
