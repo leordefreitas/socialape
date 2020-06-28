@@ -29,7 +29,7 @@ exports.createUser = (req, res) => {
 // validating information
   let token = null;
   let userId = null;
-  db.doc(`/users/${newUser.email}`).get()
+  db.doc(`/users/${newUser.handle}`).get()
   .then(doc => {
     if (doc.exists) {
       return res.status(400).json({message: `This user already exists, please change your user`});
@@ -50,10 +50,10 @@ exports.createUser = (req, res) => {
       name: newUser.name,
       whatsapp: newUser.whatsapp,
       createAt: new Date().toISOString(),
-      id: userId,
+      userId: userId,
       imageUrl: `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${noImage}?alt=media`
     };
-    return db.doc(`/users/${newUser.email}`).set(userCredentials);
+    return db.doc(`/users/${newUser.handle}`).set(userCredentials);
   })
   .then(() => {
     return res.status(201).json({ token });
@@ -132,7 +132,7 @@ exports.upLoadImage = (req, res) => {
       // this is the basic url to use for see the image
       const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${imageFileName}?alt=media`;
       // update() update same value or create a new with doen`t exists
-      return db.doc(`/users/${req.user.email}`).update({imageUrl: imageUrl});
+      return db.doc(`/users/${req.user.handle}`).update({imageUrl: imageUrl});
     })
     .then(() => {
       return res.json({ message: 'Image uploaded with sucess' })
@@ -149,7 +149,7 @@ exports.upLoadImage = (req, res) => {
 exports.addUserDetail = (req, res) => {
   let userDetails = reduceUserDetails(req.body); !
   // uptading user with the new details
-  db.doc(`/users/${req.user.email}`).update(userDetails)
+  db.doc(`/users/${req.user.handle}`).update(userDetails)
     .then(() => {
       return res.json({ message: 'User details add with sucess' })
     })
@@ -162,12 +162,12 @@ exports.addUserDetail = (req, res) => {
 // TO GET USER AUTHENTICATE
 exports.getAuthenticatedUser = (req, res) => {
   let userData = {};
-  db.doc(`/users/${req.user.email}`).get()
+  db.doc(`/users/${req.user.handle}`).get()
     .then(doc => {
       // has to do it because if not crash the script
       if (doc.exists) {
         userData.credentials = doc.data();
-        return db.collection('likes').where('userEmail', '==', req.user.email).get()
+        return db.collection('likes').where('userHandle', '==', req.user.handle).get()
       }
     })
     .then(data => {

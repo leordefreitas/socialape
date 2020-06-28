@@ -4,7 +4,8 @@ const express = require('express');
 const { 
   getAllScreams, 
   createNewScream,
-  getOneScream 
+  getOneScream,
+  commentOnScream 
 } = require('./handle/screams');
 const { 
   createUser,
@@ -18,18 +19,19 @@ const { FBAuth } = require('./util/fbAuth');
 const app = express();
 
 // SCREAM ROUTES
-// get
+// get all screams
 app.get('/screams', getAllScreams);
-// add
+// add one scream
 app.post('/scream', FBAuth, createNewScream);
 // get all information about one scream
-app.get('/scream/:screamId', getOneScream)
+app.get('/scream/:screamId', getOneScream);
+// add a comment on a scream
+app.post('/scream/:screamId/comment', FBAuth, commentOnScream);
 
 // TODOS
 // TODO delete scream
 // TODO like a scream 
 // TODO unlike a scream
-// TODO comment on scream
 
 
 // USERS ROUTES
