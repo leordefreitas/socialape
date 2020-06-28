@@ -2,7 +2,7 @@ const { admin, db } = require('../util/admin');
 const { validateUsersSignUp, validateUsersLogin, reduceUserDetails } = require('../util/validates');
 const firebase = require('firebase');
 // const { app } = require('firebase-functions');
-const { firebaseConfig } = require('../util/firebaseConfig');
+const { firebaseConfig } = require('../util/key/firebaseConfig');
 const { UserRecordMetadata } = require('firebase-functions/lib/providers/auth');
 
 firebase.initializeApp(firebaseConfig);
