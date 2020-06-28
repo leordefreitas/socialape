@@ -22,7 +22,7 @@ exports.FBAuth = (req, res, next) => {
         .limit(1).get();
     })
     .then((doc) => {
-      console.log(doc.docs)
+      // console.log(doc.docs)
       // // this is to add in decoded toke this informations
       req.user.handle = doc.docs[0].data().handle;
       req.user.imageUrl = doc.docs[0].data().imageUrl;

@@ -5,7 +5,10 @@ const {
   getAllScreams, 
   createNewScream,
   getOneScream,
-  commentOnScream 
+  commentOnScream, 
+  likeScream,
+  unlikeScream,
+  deleteScream 
 } = require('./handle/screams');
 const { 
   createUser,
@@ -27,12 +30,12 @@ app.post('/scream', FBAuth, createNewScream);
 app.get('/scream/:screamId', getOneScream);
 // add a comment on a scream
 app.post('/scream/:screamId/comment', FBAuth, commentOnScream);
-
-// TODOS
-// TODO delete scream
-// TODO like a scream 
-// TODO unlike a scream
-
+// like a scream
+app.get('/scream/:screamId/like', FBAuth, likeScream);
+// unlike a scream
+app.get('/scream/:screamId/unlike', FBAuth, unlikeScream);
+// delete scream
+app.delete('/scream/:screamId', FBAuth, deleteScream);
 
 // USERS ROUTES
 // create
