@@ -1,7 +1,11 @@
 // LIBRARYS
 const functions = require('firebase-functions');
 const express = require('express');
-const { getAllScreams, createNewScream } = require('./handle/screams');
+const { 
+  getAllScreams, 
+  createNewScream,
+  getOneScream 
+} = require('./handle/screams');
 const { 
   createUser,
   loginUser, 
@@ -18,7 +22,8 @@ const app = express();
 app.get('/products', getAllScreams);
 // add
 app.post('/products', FBAuth, createNewScream);
-
+// get all information about one scream
+// app.get('/scream/:screamId', getOneScream)
 
 
 // USERS ROUTES

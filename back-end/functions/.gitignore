@@ -1,1 +1,6 @@
+# Library
 node_modules/
+
+# Key fo firebase emulator, FBAuth
+util/key/
+util/fbAuth.js
