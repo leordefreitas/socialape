@@ -25,3 +25,9 @@ newUser = {
   confirmPassword: '',
   whatsapp: ''
 }
+
+reduceUserDetails = {
+  bio: '',
+  website: '',
+  location: ''
+}

@@ -28,7 +28,7 @@ exports.createNewScream = (req, res) => {
   };
   // creating
   const newScream = {
-    userHandle: req.body.userHandle,
+    handleUser: req.user.handleUser,
     body: req.body.body,
     likeCount: req.body.likeCount,
     commentCount: req.body.commentCount,

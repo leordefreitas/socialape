@@ -1,15 +1,18 @@
 const { admin, db } = require('../util/admin');
-const { validateUsersSignUp, validateUsersLogin, reduceUserDetails } = require('../util/validates');
+const { 
+  validateUsersSignUp, 
+  validateUsersLogin, 
+  reduceUserDetails 
+} = require('../util/validates');
 const firebase = require('firebase');
-// const { app } = require('firebase-functions');
 const { firebaseConfig } = require('../util/key/firebaseConfig');
-const { UserRecordMetadata } = require('firebase-functions/lib/providers/auth');
 
 firebase.initializeApp(firebaseConfig);
 
 // TO CREATE NEW USER
 exports.createUser = (req, res) => {
   const newUser = {
+    handle: req.body.handle,
     email: req.body.email,
     name: req.body.name,
     password: req.body.password,
@@ -26,10 +29,10 @@ exports.createUser = (req, res) => {
 // validating information
   let token = null;
   let userId = null;
-  db.doc(`/users/${newUser.email}`).get()
+  db.doc(`/users/${newUser.handle}`).get()
   .then(doc => {
     if (doc.exists) {
-      return res.status(400).json({email: `This email already exists`});
+      return res.status(400).json({message: `This user already exists, please change your user`});
     } else {
       return firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
     }
@@ -42,6 +45,7 @@ exports.createUser = (req, res) => {
   .then((idToken) => {
     token = idToken;
     const userCredentials = {
+      handle: newUser.handle,
       email: newUser.email,
       name: newUser.name,
       whatsapp: newUser.whatsapp,
@@ -49,7 +53,7 @@ exports.createUser = (req, res) => {
       id: userId,
       imageUrl: `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${noImage}?alt=media`
     };
-    return db.doc(`/users/${newUser.email}`).set(userCredentials);
+    return db.doc(`/users/${newUser.handle}`).set(userCredentials);
   })
   .then(() => {
     return res.status(201).json({ token });
@@ -78,9 +82,10 @@ exports.loginUser = (req, res) => {
     return data.user.getIdToken();
   })
   .then(token => {
-    return res.json({token})
+    return res.json({ token })
   })
   .catch(err => {
+    console.error(err)
     return res.status(500).json(err)
   })
 };
@@ -127,7 +132,7 @@ exports.upLoadImage = (req, res) => {
       // this is the basic url to use for see the image
       const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${imageFileName}?alt=media`;
       // update() update same value or create a new with doen`t exists
-      return db.doc(`/users/${req.user.email}`).update({ imageUrl: imageUrl });
+      return db.doc(`/users/${req.user.handle}`).update({imageUrl: imageUrl});
     })
     .then(() => {
       return res.json({ message: 'Image uploaded with sucess' })
@@ -142,9 +147,9 @@ exports.upLoadImage = (req, res) => {
 
 // TO ADD USER DETAIL
 exports.addUserDetail = (req, res) => {
-  let userDetails = reduceUserDetails(req.body);
+  let userDetails = reduceUserDetails(req.body); !
   // uptading user with the new details
-  db.doc(`/users/${req.user.email}`).update(userDetails)
+  db.doc(`/users/${req.user.handle}`).update(userDetails)
     .then(() => {
       return res.json({ message: 'User details add with sucess' })
     })
@@ -154,15 +159,15 @@ exports.addUserDetail = (req, res) => {
     })
 };
 
-// TO GET USER
+// TO GET USER AUTHENTICATE
 exports.getAuthenticatedUser = (req, res) => {
   let userData = {};
-  db.doc(`/users/${req.user.email}`).get()
+  db.doc(`/users/${req.user.handle}`).get()
     .then(doc => {
       // has to do it because if not crash the script
       if (doc.exists) {
         userData.credentials = doc.data();
-        return db.collection('likes').where('userEmail', '==', req.user.email).get()
+        return db.collection('likes').where('handle', '==', req.user.handle).get()
       }
     })
     .then(data => {
