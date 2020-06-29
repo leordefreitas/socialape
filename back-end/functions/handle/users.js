@@ -60,9 +60,13 @@ exports.createUser = (req, res) => {
   })
   .catch(err => {
     console.error(err);
-    return res.status(500).json({
-      error: `Something went wrong with your new user, ${err.code}`
-    });
+    if (err.code === 'auth/email-already-in-use') {
+      return res.status(400).json({ email: 'This is email is already in use' });
+    } else {
+      return res.status(500).json({
+        general: `Something went wrong, please try again`
+      });
+    }
   });
 };
 
@@ -82,11 +86,15 @@ exports.loginUser = (req, res) => {
     return data.user.getIdToken();
   })
   .then(token => {
-    return res.json({ token })
+    return res.json({ token });
   })
   .catch(err => {
-    console.error(err)
-    return res.status(500).json(err)
+    console.error(err);
+    // auth/wrong-password
+    // auth/user-not-user
+    return res.status(403).json({
+       general: 'Wrong credentials, pelase try again' 
+    });
   })
 };
 
@@ -239,8 +247,8 @@ exports.getUserDetails = (req, res) => {
 
 // mark if the notifications are readed
 exports.markNotificationsReaded = (req, res) => {
-  // this is batch i don`t nothing about it, if become a problem find 
-  // thing about this function batch
+  // this is batch used to update(), delete or set()
+  // you can change a data insede firebase
   let batch = db.batch();
   req.body.forEach(notificationId => {
     const notification = db.doc(`/notifications/${notificationId}`);
