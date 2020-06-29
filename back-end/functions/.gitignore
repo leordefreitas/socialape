@@ -4,3 +4,4 @@ node_modules/
 # functions/util/key/
 
 key/
+firebaseAdmin/

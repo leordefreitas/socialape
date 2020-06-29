@@ -2,7 +2,7 @@
 const admin = require('firebase-admin');
 
 admin.initializeApp({
-  credential: admin.credential.cert(require('../../../../../FIREBASE SERVER/malumodas-admin.json')),
+  credential: admin.credential.cert(require('./firebaseAdmin/malumodas-admin.json')),
   storageBucket: "gs://malumodas-aaaeb.appspot.com/"
 });
 
