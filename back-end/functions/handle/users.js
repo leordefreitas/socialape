@@ -167,7 +167,7 @@ exports.getAuthenticatedUser = (req, res) => {
       // has to do it because if not crash the script
       if (doc.exists) {
         userData.credentials = doc.data();
-        return db.collection('likes').where('userHandle', '==', req.user.handle).get()
+        return db.collection('likes').where('userHandle', '==', req.user.handle).get();
       }
     })
     .then(data => {
@@ -175,10 +175,83 @@ exports.getAuthenticatedUser = (req, res) => {
       data.forEach(doc => {
         userData.likes.push(doc.data());
       });
+      // this to put the notifications the user can see in your profile
+      // limit() is good becouse i can put a limit in to i wanna show
+      return db.collection('notifications').where('recipient', '==', req.user.handle)
+        .orderBy('createAt', 'desc').limit(10).get()
+    })
+    .then(data => {
+      userData.notifications = [];
+      data.forEach(doc => {
+        userData.notifications.push({
+          recipient: doc.data().recipient,
+          sender: doc.data().sender,
+          createAt: doc.data().createAt,
+          screamId: doc.data().screamId,
+          read: doc.data().read,
+          type: doc.data().type,
+          notificationId: doc.id
+        })
+      })
       return res.json(userData);
     })
     .catch(err => {
       console.error(err);
       return res.status(500).json({ error: err.code })
+    })
+};
+
+// GET USERS DETAILS OPEN PUBLIC
+// putting the user in arrays and objects just to me have acesse when
+// start to build the front end, this the windows the any user cam see
+//  so when i have to change somthing in the back-end is here
+exports.getUserDetails = (req, res) => {
+  let userData = {};
+  db.doc(`/users/${req.params.handle}`).get()
+    .then(doc => {
+      if(doc.exists) {
+        userData.user = doc.data();
+        return db.collection('screams').where('userHandle', '==', req.params.handle).orderBy('createAt', 'desc').limit(5).get()
+      } else {
+        return res.status(404).json({ error: 'User not found' });
+      }
+    })
+    .then(data => {
+      userData.screams = [];
+      data.forEach(doc => {
+        userData.screams.push({
+          body: doc.data().body,
+          createAt: doc.data().createAt,
+          userHandle: doc.data().userHandle,
+          userImage: doc.data().userImage,
+          likeCount: doc.data().likeCount,
+          commentCount: doc.data().commentCount,
+          screamId: doc.id
+        })
+      })
+      return res.json(userData);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    })
+};
+
+// mark if the notifications are readed
+exports.markNotificationsReaded = (req, res) => {
+  // this is batch i don`t nothing about it, if become a problem find 
+  // thing about this function batch
+  let batch = db.batch();
+  req.body.forEach(notificationId => {
+    const notification = db.doc(`/notifications/${notificationId}`);
+    batch.update(notification, { read: true });
+  });
+  batch.commit()
+    .then(() => {
+      return res.json({ message: 'Notification marked read' });
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
     })
 };

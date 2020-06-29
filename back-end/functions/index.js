@@ -15,7 +15,9 @@ const {
   loginUser, 
   upLoadImage, 
   addUserDetail,
-  getAuthenticatedUser
+  getAuthenticatedUser,
+  getUserDetails,
+  markNotificationsReaded
 } = require('./handle/users');
 const { FBAuth } = require('./util/fbAuth');
 const { db } = require('./util/admin');
@@ -48,6 +50,11 @@ app.post('/user/image', FBAuth, upLoadImage);
 app.post('/user', FBAuth, addUserDetail);
 // get user
 app.get('/user', FBAuth, getAuthenticatedUser);
+// get user details PUBLIC
+app.get('/user/:handle', getUserDetails);
+// make notifications readed
+app.post('/notifications', FBAuth, markNotificationsReaded);
+
 
 // EXPORTING BY EXPRESS
 exports.api = functions.https.onRequest(app);
