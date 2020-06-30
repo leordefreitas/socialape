@@ -27,7 +27,10 @@ export class home extends Component {
     // this is to with have some scream will show if not
     // will show Loading
     let recentScreamsMarkup = this.state.screams ? (
-      this.state.screams.map(scream => <Scream scream={scream} />)  
+      this.state.screams.map(scream => <Scream
+        scream={scream} 
+        key={scream.id}
+      />)  
     ) : <span>Loading...</span>
 
     return (
