@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 // material -ui
 // this i can create my styles and put in the file i wanna
@@ -10,7 +11,14 @@ import Typorgraphy from '@material-ui/core/Typography';
 
 const styles ={
   card: {
-    display: 'flex'
+    display: 'flex',
+    margimBottom: 20,
+  },
+  image: {
+    minWidth: 200
+  },
+  content: {
+    padding: 25
   }
 }
 
@@ -30,12 +38,19 @@ export class Scream extends Component {
     } = this.props;
 
     return (
-      <Card>
-        <CardMedia
-          image={userImage} title="Profile image"
+      <Card className={classes.card}>
+        <CardMedia 
+          image={userImage} 
+          title="Profile image"
+          className={classes.image}
         />
-        <CardContent>
-          <Typorgraphy variant="h5">
+        <CardContent class={classes.content}>
+          <Typorgraphy 
+            variant="h5"
+            component={Link}
+            to={`/user/${userHandle}`}
+            color="primary"
+          >
             {userHandle}
           </Typorgraphy>
           <Typorgraphy variant="body2" color="textSecondary">
