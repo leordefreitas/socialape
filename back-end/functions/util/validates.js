@@ -29,6 +29,9 @@ exports.validateUsersSignUp = data => {
   } else if (data.password !== data.confirmPassword) {
     validationErrorsCreateUser.password = 'Password must be equal to confirm password'
   }
+  if (emptyString(data.confirmPassword)) {
+    validationErrorsCreateUser.confirmPassword = 'Confirm Password must be not empty'
+  }
   // whatsapp
   if (emptyString(data.whatsapp)) {
     validationErrorsCreateUser.whatsapp = 'Whatsapp must be not empty'
@@ -38,6 +41,9 @@ exports.validateUsersSignUp = data => {
   // name
   if (emptyString(data.name)) {
     validationErrorsCreateUser.name = 'Name must be not empty'
+  }
+  if (emptyString(data.handle)) {
+    validationErrorsCreateUser.handle = 'Handle must be not empty'
   }
   // validationErrorsCreateUser
   return {

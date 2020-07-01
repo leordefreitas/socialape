@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import AppIcon from '../images/icon.png';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import themeFile from '../util/theme';
 
 // material ui
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -13,32 +14,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const styles = {
-  form: {
-    textAlign: 'center'
-  },
-  image: {
-    margin: '20px auto 10px auto',
-  },
-  pageTitle: {
-    margin: '10px auto 5px auto',
-  },
-  textField: {
-    margin: '10px auto 10px auto',
-  },
-  button: {
-    margin: '10px auto 10px auto',
-    position: "relative"
-  },
-  customError: {
-    color: 'red',
-    fontSize: '0.8rem',
-    marginTop: 10
-  },
-  progress: {
-    position: "absolute",
-  }
-}
+const styles = themeFile;
 
 export class login extends Component {
   constructor() {
@@ -65,10 +41,15 @@ export class login extends Component {
     // i have to pass the information here inside the post
     axios.post('/login', userData)
       .then(res => {
-        console.log(res.data);
+        // console.log(res.data);
+        // this is to put the token locally becousa when
+        // update the page the token is the same
+        localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`);
         this.setState({
           loading: false
         });
+        // this is to move into thata direction
+        this.props.history.push('/');
       })
       .catch(err => {
         this.setState({
@@ -117,7 +98,7 @@ export class login extends Component {
             <TextField 
               id="password"
               name="password"
-              type="text"
+              type="password"
               className={classes.textField}
               helperText={errors.password}
               error={errors.password ? true : false}
