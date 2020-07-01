@@ -4,6 +4,10 @@ import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import themeFile from './util/theme';
 import jwtDecode from 'jwt-decode';
+// redux
+// `to connect the redux with the react
+import { Provider } from 'react-redux';
+import store from './redux//reducers/store';
 
 // PAGES
 import home from './pages/home';
@@ -14,7 +18,7 @@ import signup from './pages/signup';
 import Navbar from './components/Navbar';
 import AuthRoute from './util/AuthRoute';
 
-// material-ui
+// MATERIAL-UI
 // `this is here becouse all pages will have
 // `the same theme, all this is in the website
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
@@ -43,7 +47,7 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <div className="App">
+        <Provider store={store}>
           <Router>
             <Navbar/>
             <div className="container">
@@ -53,8 +57,8 @@ class App extends Component {
                 <AuthRoute exact path="/signup" component={signup} authenticated={authenticated} />
               </Switch>
             </div>
-          </Router>
-        </div>
+            </Router>
+        </Provider>
       </MuiThemeProvider>
     );
   }

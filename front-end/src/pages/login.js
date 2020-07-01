@@ -2,9 +2,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AppIcon from '../images/icon.png';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import themeFile from '../util/theme';
+
+// redux
+// `this serve to connect to the page i want the information directly
+import { connect } from 'react-redux';
+import { loginUser } from '../redux/actions/userActions';
 
 // material ui
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -22,7 +26,6 @@ export class login extends Component {
     this.state = {
       email: '',
       password: '',
-      loading: false,
       errors: {}
     }
   }
@@ -31,32 +34,16 @@ export class login extends Component {
   // in the end he became false again
   handleSubmit = (event) => {
     event.preventDefault();
-    this.setState({
-      loading: true
-    });
+
     const userData = {
       email: this.state.email,
       password: this.state.password
     };
-    // i have to pass the information here inside the post
-    axios.post('/login', userData)
-      .then(res => {
-        // console.log(res.data);
-        // this is to put the token locally becousa when
-        // update the page the token is the same
-        localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`);
-        this.setState({
-          loading: false
-        });
-        // this is to move into thata direction
-        this.props.history.push('/');
-      })
-      .catch(err => {
-        this.setState({
-          errors: err.response.data,
-          loading: false
-        })
-      })
+    // here i go to use the loginUser the function i create in the
+    // in the user actions, this.props.history is to me have acess
+    // and change the page in the another code
+    this.props.loginUser(userData, this.props.history);
+
   };
   
   // to change any thing is writ in the form
@@ -146,4 +133,5 @@ login.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(login)
+// this is when we use connect so just in the redux files
+export default connect()(withStyles(styles)(login))

@@ -11,9 +11,9 @@ import {
 import thunk from 'redux-thunk';
 
 // IMPORTING THE REDUCERS
-import userReducers from './userReducers';
-import uiReducers from './uiReducers';
-import dataReducers from './dataReducers';
+import userReducer from './userReducer';
+import uiReducer from './uiReducer';
+import dataReducer from './dataReducer';
 
 const initialState = {};
 
@@ -21,9 +21,9 @@ const middleware = [thunk];
 
 // this is the reducers to became one 
 const reducers = combineReducers({
-  user: userReducers,
-  UI: uiReducers,
-  data: dataReducers
+  user: userReducer,
+  UI: uiReducer,
+  data: dataReducer
 });
 
 // store
