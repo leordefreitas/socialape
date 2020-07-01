@@ -13,7 +13,7 @@ exports.getAllScreams = (req, res) => {
         likeCount: docToPush.data().likeCount,
         commentCount: docToPush.data().commentCount,
         createAt: docToPush.data().createAt,
-        userImage: doc.data().userImage
+        userImage: docToPush.data().userImage
       });
     });
     return res.json(screamArray);
