@@ -54,8 +54,8 @@ export class login extends Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { errors, loading } = this.state;
+    const { classes, UI: { loading } } = this.props;
+    const { errors } = this.state;
     return (
       <Grid container className={classes.form}>
         <Grid item sm />
@@ -130,8 +130,23 @@ export class login extends Component {
 // this i never see, they serve to you give the information
 // about the props the script has
 login.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  loginUser: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  UI: PropTypes.object.isRequired
+}
+
+// maps
+// `mapsToState have the information i wanna to this page
+// `mapActions have the functions actions i will use i this app
+const mapStateToProps = (state) => ({
+  user: state.user,
+  UI: state.UI
+});
+
+const mapActionsToProps = {
+  loginUser
 }
 
 // this is when we use connect so just in the redux files
-export default connect()(withStyles(styles)(login))
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(login))
