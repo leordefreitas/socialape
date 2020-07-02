@@ -76,9 +76,28 @@ export const signupUser = (userData, history) => (dispatch) => {
           payload: err.response.data
         })
       })
-
     };
     
+// TO CHANGE IMAGE
+export const uploadImage = (formData) => (dispatch) => {
+  dispatch({ type: LOADING_USER });
+  axios.post('/user/image', formData)
+    .then(() => {
+      dispatch(getUserData());
+    })
+    .catch(err => console.error(err))
+};
+
+// SET DETAILS USER
+export const editUserDetails = (userDetails) => (dispatch) => {
+  dispatch({ type: LOADING_USER });
+  axios.post('/user', userDetails)
+    .then(() => {
+      dispatch(getUserData());
+    })
+    .catch(err => console.error(err))
+};
+
 // FUCTION TO SET THE TOKEN
 // this is to put the token locally becousa when
 // update the page the token is the same

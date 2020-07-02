@@ -13,7 +13,7 @@ import thunk from 'redux-thunk';
 // IMPORTING THE REDUCERS
 import userReducer from './userReducer';
 import uiReducer from './uiReducer';
-import dataReducer from './dataReducer';
+// import dataReducer from './dataReducer';
 
 const initialState = {};
 

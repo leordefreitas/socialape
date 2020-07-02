@@ -3,8 +3,10 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
+import EditDetails from './EditDetails';
 // redux
 import { connect } from 'react-redux';
+import { logoutUser, uploadImage } from '../redux/actions/userActions';
 // material ui
 import themeFile from '../util/theme';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -12,15 +14,43 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import MuiLink from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 // `icons
 import LocationOn from '@material-ui/icons/LocationOn';
 import LinkIcon from '@material-ui/icons/Link';
 import CalendarToday from '@material-ui/icons/CalendarToday';
+import EditIcon from '@material-ui/icons/Edit';
+import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
 
 // styles that i save all in this file
 const styles = themeFile;
 
 export class Profile extends Component {
+  // to import some imgae to the user event
+  handleImageChange = (event) => {
+    // this is becouse the type of the input is file so
+    // when he got the files only the first will be charge
+    // if not put [0] will bug the code
+    const image = event.target.files[0];
+    // send image to firebase, so formData() never use but
+    // i think is just to create a new data format 
+    const formData = new FormData();
+    formData.append('image', image, image.name);
+    this.props.uploadImage(formData);
+  };
+  // this is to activate the handleImageChange becouse they 
+  // will not have a button so to activate then we need do this
+  handleEditPicture = () => {
+    const fileInput = document.getElementById('imageInput');
+    // i can use this function to do things that i don`t need
+    // the user to click
+    fileInput.click();
+  };
+  handleLogout = () => {
+    this.props.logoutUser();
+  };
+
   render() {
     const { classes, user: { authenticated, loading, credentials: { 
       handle,
@@ -38,6 +68,17 @@ export class Profile extends Component {
         <div className={classes.profile}>
           <div className="image-wrapper">
             <img src={imageUrl} alt="profile" className="profile-image"/>
+            <input 
+              type="file" 
+              id="imageInput" 
+              onChange={this.handleImageChange} 
+              hidden="hidden"
+            />
+            <Tooltip title="Edit profile picture" placement="top">
+              <IconButton onClick={this.handleEditPicture} className="button">
+                <EditIcon color="primary" />
+              </IconButton>
+            </Tooltip>
           </div>
           <hr />
           <div className="profile-details">
@@ -69,6 +110,12 @@ export class Profile extends Component {
             <CalendarToday color="primary" />
             <span>Joined {dayjs(createAt).format('MMM YYYY')}</span>
           </div>
+          <Tooltip title="Logout" placement="top">
+            <IconButton onClick={this.handleLogout}>
+              <KeyboardReturn color="primary" />
+            </IconButton>
+          </Tooltip>
+          <EditDetails />
         </div>
       </Paper>    
     ) : (
@@ -101,11 +148,19 @@ export class Profile extends Component {
 
 Profile.propTypes = {
   user: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func.isRequired,
+  uploadImage: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(Profile));
+const mapActionsToProps = {
+  logoutUser,
+  uploadImage
+};
+
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Profile));

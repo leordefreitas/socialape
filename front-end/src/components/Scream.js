@@ -34,9 +34,9 @@ export class Scream extends Component {
         createAt, 
         userImage, 
         userHandle,
-        screamId,
-        likeCount,
-        commentCount 
+        // screamId,
+        // likeCount,
+        // commentCount 
       }
     } = this.props;
 
