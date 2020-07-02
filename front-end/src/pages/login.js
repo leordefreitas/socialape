@@ -35,7 +35,7 @@ export class login extends Component {
     if(nextProps.UI.errors) {
       this.setState({ errors: nextProps.UI.errors });
     }
-  }
+  };
 
   // to submit the form
   // the loading here is tru when the firebase are loading

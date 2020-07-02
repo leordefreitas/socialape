@@ -8,6 +8,8 @@ import jwtDecode from 'jwt-decode';
 // `to connect the redux with the react
 import { Provider } from 'react-redux';
 import store from './redux//reducers/store';
+import { SET_AUTHENTICATED } from './redux/reducers/types';
+import { logoutUser, getUserData } from './redux/actions/userActions';
 
 // PAGES
 import home from './pages/home';
@@ -23,6 +25,7 @@ import AuthRoute from './util/AuthRoute';
 // `the same theme, all this is in the website
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import axios from 'axios';
 
 // using theme
 const theme = createMuiTheme(themeFile);
@@ -32,16 +35,21 @@ const theme = createMuiTheme(themeFile);
 // `* 1000 becouse is seconds so to be in the same order
 // `window locatioon is to redirect the user to the new page
 const token = localStorage.FBIdtoken;
-let authenticated;
 if (token) {
   const decodedToken = jwtDecode(token);
   if (decodedToken.exp * 1000 < Date.now()) {
-    window.location.href = '/login'
-    authenticated = false;
+    // to change th state i can call store and use the redux
+    // dispatch to call an actions function
+    store.dispatch(logoutUser());
+    window.location.href = '/login';
   } else {
-    authenticated = true;
+    store.dispatch({ type: SET_AUTHENTICATED });
+    // this is used to not the page change i lose the 
+    // authorizations header
+    axios.defaults.headers.common['Authorization'] = token;
+    store.dispatch(getUserData());
   }
-}
+};
 
 class App extends Component {
   render() {
@@ -53,8 +61,8 @@ class App extends Component {
             <div className="container">
               <Switch>
                 <Route exact path="/" component={home}/>
-                <AuthRoute exact path="/login" component={login} authenticated={authenticated} />
-                <AuthRoute exact path="/signup" component={signup} authenticated={authenticated} />
+                <AuthRoute exact path="/login" component={login} />
+                <AuthRoute exact path="/signup" component={signup} />
               </Switch>
             </div>
             </Router>

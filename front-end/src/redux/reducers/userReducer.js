@@ -1,9 +1,10 @@
-import { SET_USER, SET_AUTHENTICATED, SET_UNAUTHENTICATED } from '../reducers/types';
+import { LOADING_USER, SET_USER, SET_AUTHENTICATED, SET_UNAUTHENTICATED } from '../reducers/types';
 
 // REDUCER
 // here is where we have acess to the information that the site
 // have so become more easy to acess that
 const initialState = {
+  loading: false,
   authenticated: false,
   credentials: {},
   likes: [],
@@ -15,17 +16,24 @@ const initialState = {
 export default function(state = initialState, action) {
   // this is use to get the type and use it
   switch(action.type) {
+    case LOADING_USER:
+      return {
+        ...state,
+        loading: true
+      }
     case SET_AUTHENTICATED:
       return {
         // when we do this like ...state we is call all the object
         // and we can change what we want to
         ...state,
-        authenticated: true
+        authenticated: true,
       };
     case SET_UNAUTHENTICATED:
       return initialState;
     case SET_USER:
       return {
+        authenticated: true,
+        loading: false,
         ...action.payload
       };
     default:

@@ -2,9 +2,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AppIcon from '../images/icon.png';
-import axios from 'axios';
+// import axios from 'axios';
 import { Link } from 'react-router-dom';
 import themeFile from '../util/theme';
+
+// redux
+import { connect } from 'react-redux';
+import { signupUser } from '../redux/actions/userActions';
 
 // material ui
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -27,18 +31,21 @@ export class signup extends Component {
       handle: '',
       whatsapp: '',
       name: '',
-      loading: false,
       errors: {}
     }
   }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.UI.errors) {
+      this.setState({ errors: nextProps.UI.errors });
+    }
+  };
+
   // to submit the form
   // the loading here is tru when the firebase are loading
   // in the end he became false again
   handleSubmit = (event) => {
     event.preventDefault();
-    this.setState({
-      loading: true
-    });
+   
     const newUserData = {
       email: this.state.email,
       password: this.state.password,
@@ -47,25 +54,11 @@ export class signup extends Component {
       whatsapp: this.state.whatsapp,
       name: this.state.name
     };
-    // i have to pass the information here inside the post
-    axios.post('/signup', newUserData)
-      .then(res => {
-        // console.log(res.data);
-        localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`);
-        this.setState({
-          loading: false
-        });
-        // this is to move into thata direction
-        this.props.history.push('/');
-      })
-      .catch(err => {
-        this.setState({
-          errors: err.response.data,
-          loading: false
-        })
-      })
+
+  this.props.signupUser(newUserData, this.props.history);
   };
   
+
   // to change any thing is writ in the form
   handleChange = (event) => {
     this.setState({
@@ -74,8 +67,8 @@ export class signup extends Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { errors, loading } = this.state;
+    const { classes, UI: { loading } } = this.props;
+    const { errors } = this.state;
     return (
       <Grid container className={classes.form}>
         <Grid item sm />
@@ -198,7 +191,19 @@ export class signup extends Component {
 // this i never see, they serve to you give the information
 // about the props the script has
 signup.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  UI: PropTypes.object.isRequired,
+  signupUser: PropTypes.func.isRequired
 }
 
-export default withStyles(styles)(signup)
+const mapStateToProps = (state) => ({
+  user: state.user,
+  UI: state.UI
+});
+
+const mapActionsToProps = {
+  signupUser
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(signup))
