@@ -55,11 +55,15 @@ exports.validateUsersSignUp = data => {
 // VALIDATIG TO LOGIN
 exports.validateUsersLogin = data => {
   let validationErrorsLogin = {};
-  if (emptyString(data.email)) return validationErrorsLogin.email = 'Must not be empty';
-  if (emptyString(data.password)) return validationErrorsLogin.password = 'Must not be empty';
-    return {
-    validationErrorsLogin,
-    valid: Object.keys(validationErrorsLogin).length === 0 ? true : false
+  if (emptyString(data.email)) {
+    validationErrorsLogin.email = 'Must not be empty';
+  }
+  if (emptyString(data.password)) {
+    validationErrorsLogin.password = 'Must not be empty';
+  }
+  return {
+  validationErrorsLogin,
+  valid: Object.keys(validationErrorsLogin).length === 0 ? true : false
   }
 };
 

@@ -27,8 +27,16 @@ export class login extends Component {
       email: '',
       password: '',
       errors: {}
+    };
+  }
+  // when i wanna to put in state something is a props i
+  // have to use the follow code
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.UI.errors) {
+      this.setState({ errors: nextProps.UI.errors });
     }
   }
+
   // to submit the form
   // the loading here is tru when the firebase are loading
   // in the end he became false again

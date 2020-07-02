@@ -32,7 +32,7 @@ exports.createUser = (req, res) => {
   db.doc(`/users/${newUser.handle}`).get()
   .then(doc => {
     if (doc.exists) {
-      return res.status(400).json({ general: `This user already exists, please change your user` });
+      return res.status(400).json({ general: `This handle already exists, please chose another handle` });
     } else {
       return firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password);
     }
