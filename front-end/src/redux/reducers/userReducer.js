@@ -1,4 +1,4 @@
-import { LOADING_USER, SET_USER, SET_AUTHENTICATED, SET_UNAUTHENTICATED } from '../reducers/types';
+import { LOADING_USER, SET_USER, SET_AUTHENTICATED, SET_UNAUTHENTICATED, LIKE_SCREAM, UNLIKE_SCREAM } from '../reducers/types';
 
 // REDUCER
 // here is where we have acess to the information that the site
@@ -36,6 +36,24 @@ export default function(state = initialState, action) {
         loading: false,
         ...action.payload
       };
+    case LIKE_SCREAM:
+      return {
+        ...state,
+        likes: [
+          ...state.likes,
+          {
+            screamId: action.payload.screamId,
+            userHandle: state.credentials.handle
+          }
+        ]
+      }
+    case UNLIKE_SCREAM:
+      return {
+        ...state,
+        likes: state.likes.filter(
+          (like) => like.screamId === action.payload.screamId
+        )
+      }
     default:
       // every thing i do insede this array is a state so
       // when i change i need to return the state

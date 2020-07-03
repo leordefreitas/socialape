@@ -1,37 +1,29 @@
 // LIBRARYS
 import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
-import axios from 'axios';
-
+import PropTypes from 'prop-types';
+// redux
+import { connect } from 'react-redux';
+import { getScreams } from '../redux/actions/dataActions';
 // COMPONENTS
 import Scream from '../components/Scream';
 import Profile from '../components/Profile';
 
 class home extends Component {
-  // state
-  state = {
-    screams: null
-  }
+
   // this is a example how to use the componentDidMount to
   // an information from the api i create
   componentDidMount() {
-    axios.get('/screams')
-      .then(res => {
-        // console.log(res.data);
-        this.setState({
-          screams: res.data
-        })
-      })
-      .catch(err => console.error(err));
+    this.props.getScreams();
   }
-  render() {
+  render() { 
+    const { screams, loading } = this.props.data;
     // this is to with have some scream will show if not
     // will show Loading
-    let recentScreamsMarkup = this.state.screams ? (
-      this.state.screams.map(scream => <Scream scream={scream} key={scream.id}/>)  
+    let recentScreamsMarkup = !loading ? (
+      screams.map(scream => <Scream scream={scream} key={scream.id}/>)  
     ) : <span>Loading...</span>
-
-    return (
+      return (
       <Grid container spacing={10}>
         <Grid item sm={8} xs={12}>
           <div>{recentScreamsMarkup}</div>
@@ -44,4 +36,13 @@ class home extends Component {
   }
 }
 
-export default home
+home.propTypes = {
+  getScreams: PropTypes.func.isRequired,
+  data: PropTypes.object.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  data: state.data
+});
+
+export default connect(mapStateToProps, { getScreams })(home);

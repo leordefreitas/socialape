@@ -27,7 +27,7 @@ export class Navbar extends Component {
               <AddIcon color="primary" />
             </MyButton>
             <MyButton tip="Home">
-              <HomeIcon color="primary" />
+              <HomeIcon color="primary" to="/"/>
             </MyButton>
             <MyButton tip="Notifications">
               <Notifications color="primary" />
