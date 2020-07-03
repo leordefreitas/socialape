@@ -28,6 +28,10 @@ export default {
   textField: {
     margin: '10px auto 10px auto'
   },
+  buttonIcon: {
+    float: 'right',
+    position: 'relative'
+  },
   button: {
     marginTop: 20,
     position: 'relative'

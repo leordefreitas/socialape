@@ -3,14 +3,13 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import themeFile from '../util/theme';
 import { editUserDetails } from '../redux/actions/userActions';
+import MyButton from '../util/MyButton';
 // material ui
 import withStyles from '@material-ui/core/styles/withStyles';
-import Tooltip from '@material-ui/core/Tooltip';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 // `icons
 import EditIcon from '@material-ui/icons/Edit';
@@ -70,14 +69,14 @@ export class EditDetails extends Component {
     const { classes } = this.props;
     return (
       <Fragment>
-        <Tooltip title="Edit profile" placement="top">
-          <IconButton 
-          onClick={this.handleOpen} 
-          className={classes.button}
-          >
-            <EditIcon color="primary" />
-          </IconButton>
-        </Tooltip>
+        <MyButton
+          tip="Edit profile"
+          onClick={this.handleOpen}
+          btnClassName={classes.button}
+          placement="top"
+        >
+          <EditIcon color="primary" />
+        </MyButton>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
