@@ -13,6 +13,16 @@ export default {
       contrastText: '#fff'
     }
   },
+  card: {
+    display: 'flex',
+    margimBottom: 400,
+  },
+  image: {
+    minWidth: 500
+  },
+  content: {
+    padding: 25
+  },
   typography: {
     useNextVariants: true
   },

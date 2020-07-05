@@ -38,11 +38,13 @@ class home extends Component {
 
 home.propTypes = {
   getScreams: PropTypes.func.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  data: state.data
+  data: state.data,
+  user: state.user
 });
 
 export default connect(mapStateToProps, { getScreams })(home);

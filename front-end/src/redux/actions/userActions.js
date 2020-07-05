@@ -102,9 +102,9 @@ export const editUserDetails = (userDetails) => (dispatch) => {
 // this is to put the token locally becousa when
 // update the page the token is the same
 const setAuthorizationsHeader = (token) => {
-  const FBIToken = `Bearer ${token}`;
-  localStorage.setItem('FBIdToken', FBIToken);
+  const FBIdToken = `Bearer ${token}`;
+  localStorage.setItem('FBIdToken', FBIdToken);
   // this axios here is to put the Bearer inside the authorization header
-  axios.defaults.headers.common['Authorization'] = FBIToken;
+  axios.defaults.headers.common['Authorization'] = FBIdToken;
 };
     

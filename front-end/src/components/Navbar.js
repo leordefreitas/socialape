@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
 // MATERIAL-UI
 // all this below is in the site of the materia-ui
 // so any thing i wanna know just go to their site
@@ -23,15 +22,15 @@ export class Navbar extends Component {
       <AppBar>
         {authenticated ? (
           <Fragment>
-            <MyButton tip="Post a scream">
-              <AddIcon color="primary" />
-            </MyButton>
-            <MyButton tip="Home">
-              <HomeIcon color="primary" to="/"/>
-            </MyButton>
-            <MyButton tip="Notifications">
-              <Notifications color="primary" />
-            </MyButton>
+              <MyButton tip="Post a scream">
+                <AddIcon color="primary" />
+              </MyButton>
+                <MyButton tip="Home">
+                  <HomeIcon color="primary" />
+                </MyButton>
+              <MyButton tip="Notifications">
+                <Notifications color="primary" />
+              </MyButton>
           </Fragment>
         ) : (
           <Fragment>
