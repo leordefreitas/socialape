@@ -1,4 +1,14 @@
-import { SET_SCREAMS, LOADING_DATA, UNLIKE_SCREAM, LIKE_SCREAM } from '../reducers/types';
+import { 
+  SET_SCREAMS, 
+  LOADING_DATA, 
+  UNLIKE_SCREAM, 
+  LIKE_SCREAM, 
+  DELETE_SCREAM, 
+  POST_SCREAM, 
+  LOADING_UI, 
+  SET_ERRORS,
+  CLEAR_ERRORS
+} from '../reducers/types';
 import  axios from 'axios';
 
 // get all screams
@@ -12,6 +22,28 @@ export const getScreams = () => (dispatch) => {
       })
     })
     .catch(err => console.error(err))
+};
+
+// post scream
+export const postScream = (newScreamData) => (dispatch) => {
+  dispatch({ type: LOADING_UI })
+  axios.post('/scream', newScreamData)
+  .then(res => {
+    dispatch({
+      type: POST_SCREAM,
+      payload: res.data
+    })
+    dispatch({ type: CLEAR_ERRORS })
+  })
+  // here just becouse they have the handle errors in our
+  // back-end so when give me an error in the bac-end i can
+  // use in here so that becouse this
+  .catch(err => {
+    dispatch({
+      type: SET_ERRORS,
+      payload: err.response.data
+    })
+  })
 };
 
 // like
@@ -36,4 +68,16 @@ export const unlikeScream = (screamId) => (dispatch) => {
       })
     })
     .catch(err => console.error(err))
+};
+
+// delete Scream
+export const deleteScream = (screamId) => (dispatch) => {
+  axios.delete(`/scream/${screamId}`)
+    .then(() => {
+      dispatch({
+        type: DELETE_SCREAM,
+        payload: screamId
+      })
+    })
+    .catch(err => console.error(err));
 };

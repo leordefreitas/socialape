@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import PropTypes from 'prop-types';
 import MyButton from '../util/MyButton';
+import DeleteScream from './DeleteScream';
 // redux
 import { connect } from 'react-redux';
 import { likeScream, unlikeScream } from '../redux/actions/dataActions';
@@ -66,7 +67,7 @@ export class Scream extends Component {
         id,
         likeCount,
         commentCount 
-      }, user: { authenticated }
+      }, user: { authenticated, credentials: { handle } }
     } = this.props;
     // here just a conditons to show wich button depending the 
     // situation from the user, awalyus i wanna put some codition to show the 
@@ -88,6 +89,11 @@ export class Scream extends Component {
         </MyButton>
       )
     )
+    const deleteButton = authenticated && userHandle === handle ? (
+      <DeleteScream screamId={id} />
+      // here i know that i will not put anything but now i know just
+      // can i put null to when i wanna to put nothing to show the user
+    ) : null
     return (
       <Card className={classes.card}>
         <CardMedia 
