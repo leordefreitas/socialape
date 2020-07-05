@@ -1,4 +1,5 @@
 const { db } = require('../util/admin');
+const { validateNewScream } = require('../util/validates');
 
 // HANDLE TO GET ALL SCREAMS
 exports.getAllScreams = (req, res) => {
@@ -36,6 +37,11 @@ exports.createNewScream = (req, res) => {
     createAt: new Date().toISOString(),
     userImage: req.user.imageUrl
   };
+
+  // validation of the post
+  const { valid, validationErrorsNewScream } = validateNewScream(newScream);
+  if(!valid) res.status(400).json(validationErrorsNewScream);
+
   // posting
   db.collection('screams').add(newScream)
   .then((doc) => {

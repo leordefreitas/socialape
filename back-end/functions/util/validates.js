@@ -13,6 +13,18 @@ const isWhatsapp = (whatsappNumber) => {
   else return false;
 };
 
+// VALIDATING BODY OF NEW SCREAM
+exports.validateNewScream = data => {
+  let validationErrorsNewScream = {};
+  if (emptyString(data.body)) {
+    validationErrorsNewScream.body = 'Must not be empty';
+  };
+  return {
+    validationErrorsNewScream,
+    valid: Object.keys(validationErrorsNewScream).length === 0 ? true : false
+  }
+};
+
 // VALIDATING CREATE USERS
 exports.validateUsersSignUp = data => {
   let validationErrorsCreateUser = {};
