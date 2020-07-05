@@ -1,4 +1,4 @@
-import { SET_ERRORS, CLEAR_ERRORS, LOADING_UI } from '../reducers/types';
+import { SET_ERRORS, CLEAR_ERRORS,STOP_LOADING_UI, LOADING_UI } from '../reducers/types';
 
 const initialState = {
   loading: false,
@@ -24,6 +24,11 @@ export default function(state = initialState, action) {
         loading: false,
         errors: null
       }
+    case STOP_LOADING_UI:
+      return {
+        ...state,
+        loading: false
+      };
     default:
       return state;
   } 

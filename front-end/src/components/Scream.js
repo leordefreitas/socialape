@@ -6,6 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import PropTypes from 'prop-types';
 import MyButton from '../util/MyButton';
 import DeleteScream from './DeleteScream';
+import ScreamDialog from './ScreamDialog';
 // redux
 import { connect } from 'react-redux';
 import { likeScream, unlikeScream } from '../redux/actions/dataActions';
@@ -120,6 +121,7 @@ export class Scream extends Component {
           <span>{likeButton} {likeCount} Likes</span>
           <MyButton tip="Comments"><ChatIcon color="primary" /></MyButton>
           <span>{commentCount} comments</span>
+          <ScreamDialog screamId={id} userHandle={userHandle} />
         </CardContent>
       </Card>
     )

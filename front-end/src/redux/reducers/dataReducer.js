@@ -1,4 +1,4 @@
-import { POST_SCREAM, SET_SCREAMS, LOADING_DATA, LIKE_SCREAM, UNLIKE_SCREAM, DELETE_SCREAM } from './types';
+import { POST_SCREAM, SET_SCREAMS, LOADING_DATA, LIKE_SCREAM, UNLIKE_SCREAM, DELETE_SCREAM, SET_SCREAM } from './types';
 
 const initialState = {
   screams: [],
@@ -13,6 +13,11 @@ export default function(state = initialState, action) {
         ...state,
         screams: action.payload,
         loading: false
+      }
+    case SET_SCREAM:
+      return {
+        ...state,
+        scream: action.payload
       }
     case LOADING_DATA:
       return {

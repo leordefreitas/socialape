@@ -7,7 +7,9 @@ import {
   POST_SCREAM, 
   LOADING_UI, 
   SET_ERRORS,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  SET_SCREAM,
+  STOP_LOADING_UI
 } from '../reducers/types';
 import  axios from 'axios';
 
@@ -20,6 +22,20 @@ export const getScreams = () => (dispatch) => {
         type: SET_SCREAMS,
         payload: res.data
       })
+    })
+    .catch(err => console.error(err))
+};
+
+// get one scream
+export const getScream = (screamId) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios.get(`/scream/${screamId}`)
+    .then((res) => {
+      dispatch({
+        type: SET_SCREAM,
+        payload: res.data
+      })
+      dispatch({ type: STOP_LOADING_UI })
     })
     .catch(err => console.error(err))
 };
@@ -80,4 +96,9 @@ export const deleteScream = (screamId) => (dispatch) => {
       })
     })
     .catch(err => console.error(err));
+};
+
+// clear errors
+export const clearErrors = () => (dispatch) => {
+  dispatch({ type: CLEAR_ERRORS })
 };
