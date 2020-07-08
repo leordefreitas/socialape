@@ -1,9 +1,9 @@
 // LIBRARY
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import themeFile from '../util/theme';
-import { editUserDetails } from '../redux/actions/userActions';
-import MyButton from '../util/MyButton';
+import themeFile from '../../util/theme';
+import { editUserDetails } from '../../redux/actions/userActions';
+import MyButton from '../../util/MyButton';
 // material ui
 import withStyles from '@material-ui/core/styles/withStyles';
 import Dialog from '@material-ui/core/Dialog';

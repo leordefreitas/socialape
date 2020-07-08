@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import PostScream from './PostScream';
+import PostScream from '../scream/PostScream';
 // MATERIAL-UI
 // all this below is in the site of the materia-ui
 // so any thing i wanna know just go to their site
@@ -13,7 +13,7 @@ import Button from '@material-ui/core/Button';
 import HomeIcon from '@material-ui/icons/Home';
 import Notifications from '@material-ui/icons/Notifications';
 // this is from util
-import MyButton from '../util/MyButton';
+import MyButton from '../../util/MyButton';
 
 export class Navbar extends Component {
   render() {

@@ -17,7 +17,7 @@ import login from './pages/login';
 import signup from './pages/signup';
 
 // COMPONENTS
-import Navbar from './components/Navbar';
+import Navbar from './components/layout/Navbar';
 import AuthRoute from './util/AuthRoute';
 
 // MATERIAL-UI
