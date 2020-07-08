@@ -5,6 +5,8 @@ import MyButton from '../../util/MyButton';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 import LikeButton from './LikeButton';
+import Comments from './Comments';
+import CommentForm from './CommentForm';
 // material ui
 import withStyles from '@material-ui/core/styles/withStyles';
 import Dialog from '@material-ui/core/Dialog';
@@ -46,6 +48,11 @@ const styles = {
     textAlign: 'center',
     marginTop: 50,
     marginBottom: 50
+  },
+  visibleSeparator: {
+    width: '100%',
+    borderBottom: '1px solid rgba(0,0,0,0.1)',
+    marginBottom: 20
   }
 };
 
@@ -68,7 +75,8 @@ export class ScreamDialog extends Component {
       likeCount,
       commentCount,
       userImage,
-      userHandle
+      userHandle,
+      comments
      }, UI: { loading } } = this.props;
      const dialogMarkup = loading ? (
        <div className={classes.spinnerDiv}>
@@ -101,6 +109,9 @@ export class ScreamDialog extends Component {
             </MyButton>
             <span>{commentCount} comments</span>
          </Grid>
+         <hr className={classes.visibleSeparator} />
+         <CommentForm screamId={id} />
+         <Comments comments={comments} />
        </Grid>
      )
     return (
