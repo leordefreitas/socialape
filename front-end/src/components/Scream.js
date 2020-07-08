@@ -7,9 +7,10 @@ import PropTypes from 'prop-types';
 import MyButton from '../util/MyButton';
 import DeleteScream from './DeleteScream';
 import ScreamDialog from './ScreamDialog';
+import LikeButton from './LikeButton';
 // redux
 import { connect } from 'react-redux';
-import { likeScream, unlikeScream } from '../redux/actions/dataActions';
+
 // material -ui
 // this i can create my styles and put in the file i wanna
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -19,8 +20,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 // `icons
 import ChatIcon from '@material-ui/icons/Chat';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const styles = {                                  
   card: {
@@ -38,24 +37,6 @@ const styles = {
 };
 
 export class Scream extends Component {
-  // to user like the scream or not to me have the sure
-  likedScream = () => {
-    if (
-      this.props.user.likes &&
-      this.props.user.likes.find(
-        (like) => like.screamId === this.props.scream.id
-      )
-    ) return true;
-    else return false;
-  };
-  // this just to make the function to call the like and unlike actiosn
-  // and be more easy in the script
-  likeScream = () => {
-    this.props.likeScream(this.props.scream.id);
-  };
-  unlikeScream = () => {
-    this.props.unlikeScream(this.props.scream.id);
-  };
   render() {
     dayjs.extend(relativeTime);
     // here when you open in object the props you can use
@@ -73,23 +54,7 @@ export class Scream extends Component {
     // here just a conditons to show wich button depending the 
     // situation from the user, awalyus i wanna put some codition to show the 
     // i have to do it aboove the return
-    const likeButton = !authenticated ? (
-      <MyButton tip="Like">
-        <Link to="/login">
-          <FavoriteBorder color="primary" />
-        </Link>
-      </MyButton>
-    ) : (
-      this.likedScream() ? (
-        <MyButton tip="Undo Like" onClick={this.unlikeScream}>
-          <FavoriteIcon color="primary" />
-        </MyButton>
-      ) : (
-        <MyButton tip="Like" onClick={this.likeScream}>
-          <FavoriteBorder color="primary" />
-        </MyButton>
-      )
-    )
+    
     const deleteButton = authenticated && userHandle === handle ? (
       <DeleteScream screamId={id} />
       // here i know that i will not put anything but now i know just
@@ -118,7 +83,8 @@ export class Scream extends Component {
           <Typography variant="body1">
             {body}
           </Typography>
-          <span>{likeButton} {likeCount} Likes</span>
+          <LikeButton screamId={id} />
+          <span>{likeCount} likes</span>
           <MyButton tip="Comments"><ChatIcon color="primary" /></MyButton>
           <span>{commentCount} comments</span>
           <ScreamDialog screamId={id} userHandle={userHandle} />
@@ -129,8 +95,6 @@ export class Scream extends Component {
 }
 
 Scream.propTypes = {
-  likeScream: PropTypes.func.isRequired,
-  unlikeScream: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   scream: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired
@@ -138,11 +102,7 @@ Scream.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user,
+  data: state.data
 });
 
-const mapActionsToProps = {
-  likeScream,
-  unlikeScream
-}
-
-export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Scream));
+export default connect(mapStateToProps)(withStyles(styles)(Scream));
