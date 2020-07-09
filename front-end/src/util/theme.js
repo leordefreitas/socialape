@@ -18,7 +18,8 @@ export default {
     margimBottom: 400,
   },
   image: {
-    minWidth: 500
+    minWidth: 500,
+    margin: '20px auto 20px auto'
   },
   content: {
     padding: 25
@@ -28,9 +29,6 @@ export default {
   },
   form: {
     textAlign: 'center'
-  },
-  image: {
-    margin: '20px auto 20px auto'
   },
   pageTitle: {
     margin: '10px auto 10px auto'

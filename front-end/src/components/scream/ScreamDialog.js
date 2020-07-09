@@ -69,7 +69,7 @@ export class ScreamDialog extends Component {
   };
   render() {
     const { classes, scream: {  
-      id,
+      screamId,
       body,
       createAt,
       likeCount,
@@ -83,9 +83,9 @@ export class ScreamDialog extends Component {
          <CircularProgress size={150} thickness={2}/>
        </div>
      ) : (
-       <Grid container spacing={16}>
+       <Grid container spacing={10}>
          <Grid item sm={5}>
-           <img src={userImage} alt="Profile image" className={classes.profileImage} />
+           <img src={userImage} alt="Profile" className={classes.profileImage} />
          </Grid>
          <Grid item sm={7}>
             <Typography
@@ -102,7 +102,7 @@ export class ScreamDialog extends Component {
             <Typography variant="body1">
               {body}
             </Typography>
-            <LikeButton screamId={this.props.screamId} />
+            <LikeButton screamId={screamId} />
             <span>{likeCount} likes</span>
             <MyButton tip="comments">
               <ChatIcon color="primary" />
@@ -110,10 +110,10 @@ export class ScreamDialog extends Component {
             <span>{commentCount} comments</span>
          </Grid>
          <hr className={classes.visibleSeparator} />
-         <CommentForm screamId={id} />
-         <Comments comments={comments} />
+         {/* <CommentForm screamId={id} /> */}
+         <Comments comments={comments}/>
        </Grid>
-     )
+     );
     return (
       <Fragment>
         <MyButton
