@@ -60,7 +60,14 @@ export class ScreamDialog extends Component {
   state = {
     open: false
   }
+  componentDidMount() {
+    if(this.props.openDialog) {
+      this.handleOpen();
+    };
+  };
   handleOpen = () => {
+    // this changes is just to give some behavior equal to the
+    // twitter so to the app be with the page url behavior better
     this.setState({ open: true });
     this.props.getScream(this.props.screamId);
   };

@@ -12,7 +12,8 @@ import { getUserData } from '../redux/actions/dataActions';
 
 export class user extends Component {
   state = {
-    profile: null
+    profile: null,
+    screamIdParam: null
   }
   // this is use to in the first thing that will do when opens
   componentDidMount() {
@@ -20,6 +21,13 @@ export class user extends Component {
     // so the paramas inside the url will be the esame that const i
     // declare here
     const handle = this.props.match.params.handle;
+    // doesn`t matter where the params ar jus they have a key
+    // in this case the key is screamId
+    const screamId = this.props.match.params.screamId;
+    // just to make the user cam find the scream he wnat just by
+    // the url
+    if(screamId) this.setState({ screamIdParam: screamId })
+
     this.props.getUserData(handle);
     axios.get(`/user/${handle}`)
       .then(res => {
@@ -31,12 +39,20 @@ export class user extends Component {
   }
   render() {
     const { screams, loading } = this.props.data;
+    const { screamIdParam } = this.state;
     const screamsMarkup = loading ? (
       <p>Loading data ...</p>
     ) : screams === null ? (
       <p>No screams from this user</p>
-      ) : (
-        screams.map(scream => <Scream id={scream.screamId} scream={scream} />)
+    ) : !screamIdParam ? (
+      screams.map(scream => <Scream key={scream.screamId} scream={scream} />)
+    ) : (
+      screams.map(scream => {
+        if(scream.screamId !== screamIdParam) {
+          return <Scream key={scream.screamId} scream={scream} />
+        } 
+        else return <Scream key={scream.screamId} scream={scream} openDialog />
+      })
     )
 
     return (
