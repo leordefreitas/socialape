@@ -1,4 +1,13 @@
-import { POST_SCREAM, SET_SCREAMS, LOADING_DATA, LIKE_SCREAM, UNLIKE_SCREAM, DELETE_SCREAM, SET_SCREAM } from './types';
+import { 
+  POST_SCREAM, 
+  SET_SCREAMS, 
+  LOADING_DATA, 
+  LIKE_SCREAM, 
+  UNLIKE_SCREAM, 
+  DELETE_SCREAM, 
+  SET_SCREAM,
+  SUBMIT_COMMENT
+} from './types';
 
 const initialState = {
   screams: [],
@@ -41,6 +50,17 @@ export default function(state = initialState, action) {
     }
       return {
         ...state
+      }
+    case SUBMIT_COMMENT:
+      return {
+        ...state,
+        scream: {
+          ...state.scream,
+          comments: [
+            action.payload,
+            ...state.scream.comments
+          ]
+        }
       }
     case DELETE_SCREAM:
       let indexDelete = state.screams.findIndex(scream => scream.id === action.payload)
