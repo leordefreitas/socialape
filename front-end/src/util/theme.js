@@ -18,7 +18,7 @@ export default {
     margimBottom: 400,
   },
   image: {
-    minWidth: 500,
+    minWidth: 100,
     margin: '20px auto 20px auto'
   },
   content: {
